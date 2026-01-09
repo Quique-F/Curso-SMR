@@ -27,3 +27,4 @@ elif len(alumnos) == 1:
     print(f"Solo hay un alumno: {alumnos[0][0]} - {alumnos[0][1]} años")
 else:
     print("No se introdujeron alumnos.")
+
