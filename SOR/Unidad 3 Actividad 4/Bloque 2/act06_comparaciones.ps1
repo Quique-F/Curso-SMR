@@ -7,7 +7,8 @@ $num2 = 200
 Write-Host "Comparando $num1 y $num2..."
 
 # 1. ¿Iguales? (-eq)
-if ($num1 -eq $num2) { Write-Host "Los números son iguales." } else { Write-Host "Los números son diferentes." }
+if ($num1 -eq $num2) { Write-Host "Los números son iguales." } 
+else { Write-Host "Los números son diferentes." }
 
 # 2. ¿Mayor que? (-gt)
 if ($num1 -gt $num2) { Write-Host "$num1 es mayor que $num2." }
