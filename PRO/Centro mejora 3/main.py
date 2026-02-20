@@ -1,6 +1,6 @@
 from programa import menu1, informacion1, parrafo, mostrar_alumnos
 
-menu1()          
+menu1()         
 informacion1()   
-parrafo()        
-mostrar_alumnos()
+parrafo()       
+mostrar_alumnos() 
