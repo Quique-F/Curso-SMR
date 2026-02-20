@@ -27,21 +27,18 @@ def guardar_alumno(nombre, apellidos, edad, media, asistencia):
 
 def informacion1():
     while True:
-        # Validación de Nombre
         while True:
             nombre = input(Fore.CYAN + "Nombre: ").strip()
             if nombre.replace(" ", "").isalpha() and len(nombre) > 1:
                 break
             print(Fore.RED + "Error: El nombre debe contener solo letras ❌")
 
-        # Validación de Apellidos
         while True:
             apellidos = input(Fore.CYAN + "Apellidos: ").strip()
             if apellidos.replace(" ", "").isalpha() and len(apellidos) > 1:
                 break
             print(Fore.RED + "Error: Los apellidos deben contener solo letras ❌")
 
-        # Validación de Edad
         while True:
             try:
                 edad = int(input(Fore.CYAN + "Edad: "))
@@ -50,7 +47,6 @@ def informacion1():
             except ValueError:
                 print(Fore.RED + "Error: Introduce un número entero ❌")
 
-        # Función interna para validar notas 0-10
         def pedir_nota(texto):
             while True:
                 try:
@@ -64,7 +60,6 @@ def informacion1():
         n2 = pedir_nota("Nota 2: ")
         n3 = pedir_nota("Nota 3: ")
 
-        # Validación de Asistencia
         while True:
             try:
                 asistencia = int(input(Fore.CYAN + "Asistencia (%): "))
@@ -81,42 +76,50 @@ def informacion1():
             break
 
 def parrafo():
-    """Muestra la lista de nombres y el informe detallado."""
+    """Muestra un mensaje de confirmación de que los datos se han procesado."""
     if not alumnos:
         print(Fore.RED + "No hay datos para mostrar.")
-        return
+    else:
+        print(Fore.GREEN + f"\n✅ Se han procesado {len(alumnos)} alumnos correctamente.")
 
-    print(Fore.YELLOW + "\n" + "="*55)
-    print(Fore.YELLOW + "           INFORME DE PROMOCIÓN FINAL")
-    print(Fore.YELLOW + "="*55)
-
-    for alumno in alumnos:
-        tramo = "Menor de edad" if alumno["edad"] < 18 else "Adulto"
-        estado = "PROMOCIONA ✅" if alumno["promociona"] else "NO PROMOCIONA ❌"
-        
-        print(Fore.CYAN + f"ALUMNO/A: {alumno['nombre'].upper()} {alumno['apellidos'].upper()}")
-        print(f"Situación: {tramo} | Media: {alumno['media']:.2f} | Asistencia: {alumno['asistencia']}%")
-        print(f"Resultado: {estado}")
-        print("-" * 55)
+def imprimir_tabla(alumno):
+    """Función auxiliar para mostrar la tabla de un alumno."""
+    tramo = "Menor de edad" if alumno["edad"] < 18 else "Adulto"
+    estado = "PROMOCIONA ✅" if alumno["promociona"] else "NO PROMOCIONA ❌"
+    
+    print(Fore.YELLOW + "\n" + "="*50)
+    print(Fore.YELLOW + f"FICHA DETALLADA: {alumno['nombre'].upper()} {alumno['apellidos'].upper()}")
+    print(Fore.YELLOW + "="*50)
+    print(Fore.WHITE + f"{'CONCEPTO':<20} | {'VALOR'}")
+    print("-" * 50)
+    print(f"{'Edad':<20} | {alumno['edad']} ({tramo})")
+    print(f"{'Nota Media':<20} | {alumno['media']:.2f}")
+    print(f"{'Asistencia':<20} | {alumno['asistencia']}%")
+    print(f"{'Resultado':<20} | {estado}")
+    print("-" * 50 + "\n")
 
 def mostrar_alumnos():
-    """Módulo de búsqueda personalizada."""
+    """Módulo que lista alumnos y permite elegir uno para ver su tabla."""
     if not alumnos: return
 
-    print(Fore.GREEN + "\nSISTEMA DE BÚSQUEDA DE ALUMNADO")
     while True:
-        buscar = input(Fore.YELLOW + "¿Quieres buscar a una persona específica? (s/n): ").lower()
-        if buscar != 's':
-            print(Fore.CYAN + "Cerrando sistema de gestión. ¡Buen día!")
-            break
+        print(Fore.GREEN + "\n--- SELECCIONE UN ALUMNO PARA VER DETALLES ---")
+        for i, alumno in enumerate(alumnos, 1):
+            print(Fore.WHITE + f"{i}. {alumno['nombre']} {alumno['apellidos']}")
         
-        criterio = input(Fore.WHITE + "Escribe el nombre o apellido a localizar: ").strip().lower()
-        encontrados = [a for a in alumnos if criterio in a['nombre'].lower() or criterio in a['apellidos'].lower()]
+        print(Fore.RED + "0. Finalizar consulta")
         
-        if encontrados:
-            print(Fore.GREEN + f"\nSe han encontrado {len(encontrados)} coincidencia(s):")
-            for a in encontrados:
-                res = "SÍ" if a['promociona'] else "NO"
-                print(Fore.WHITE + f"-> {a['nombre']} {a['apellidos']} | Media: {a['media']:.2f} | Promociona: {res}")
-        else:
-            print(Fore.RED + f"No hay registros que coincidan con '{criterio}'.")
+        try:
+            opcion = int(input(Fore.YELLOW + "\nIntroduce el número del alumno: "))
+            
+            if opcion == 0:
+                print(Fore.CYAN + "Saliendo del buscador...")
+                break
+            
+            if 1 <= opcion <= len(alumnos):
+                imprimir_tabla(alumnos[opcion - 1])
+                input(Fore.CYAN + "Presiona ENTER para volver a la lista...")
+            else:
+                print(Fore.RED + "Número fuera de rango.")
+        except ValueError:
+            print(Fore.RED + "Error: Introduce un número válido.")
